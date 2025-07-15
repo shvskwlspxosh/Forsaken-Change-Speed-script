@@ -8,93 +8,107 @@ gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 gui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 200, 0, 270)
+frame.Size = UDim2.new(0, 220, 0, 280)
 frame.Position = UDim2.new(0, 50, 0, 150)
 frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 frame.Active = true
 frame.Draggable = true
 frame.Parent = gui
 
-local toggleGuiButton = Instance.new("ImageButton")
-toggleGuiButton.Size = UDim2.new(0, 40, 0, 40)
-toggleGuiButton.Position = UDim2.new(0, 20, 0, 120)
-toggleGuiButton.BackgroundTransparency = 1
-toggleGuiButton.Image = "rbxassetid://6031090990" -- default gear icon
-toggleGuiButton.Active = true
-toggleGuiButton.Draggable = true
-toggleGuiButton.Parent = gui
+local walkSpeedBox = Instance.new("TextBox")
+walkSpeedBox.Size = UDim2.new(0, 180, 0, 30)
+walkSpeedBox.Position = UDim2.new(0, 10, 0, 10)
+walkSpeedBox.PlaceholderText = "Enter walking speed"
+walkSpeedBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+walkSpeedBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+walkSpeedBox.ClearTextOnFocus = false
+walkSpeedBox.Parent = frame
 
-local imageBox = Instance.new("TextBox")
-imageBox.Size = UDim2.new(0, 180, 0, 30)
-imageBox.Position = UDim2.new(0, 10, 0, 185)
-imageBox.PlaceholderText = "Enter new icon ID (e.g. rbxassetid://123)"
-imageBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-imageBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-imageBox.ClearTextOnFocus = false
-imageBox.Parent = frame
-
-local speedBox = Instance.new("TextBox")
-speedBox.Size = UDim2.new(0, 180, 0, 30)
-speedBox.Position = UDim2.new(0, 10, 0, 10)
-speedBox.PlaceholderText = "Enter speed"
-speedBox.Text = "Enter speed"
-speedBox.TextColor3 = Color3.fromRGB(255,255,255)
-speedBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-speedBox.ClearTextOnFocus = false
-speedBox.Parent = frame
+local runSpeedBox = Instance.new("TextBox")
+runSpeedBox.Size = UDim2.new(0, 180, 0, 30)
+runSpeedBox.Position = UDim2.new(0, 10, 0, 50)
+runSpeedBox.PlaceholderText = "Enter running (sprint) speed"
+runSpeedBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+runSpeedBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+runSpeedBox.ClearTextOnFocus = false
+runSpeedBox.Parent = frame
 
 local speedLabel = Instance.new("TextLabel")
-speedLabel.Size = UDim2.new(0, 180, 0, 20)
-speedLabel.Position = UDim2.new(0, 10, 0, 45)
+speedLabel.Size = UDim2.new(0, 200, 0, 20)
+speedLabel.Position = UDim2.new(0, 10, 0, 90)
 speedLabel.BackgroundTransparency = 1
 speedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 speedLabel.Text = "Current speed: N/A"
 speedLabel.Parent = frame
 
 local capToggle = Instance.new("TextButton")
-capToggle.Size = UDim2.new(0, 180, 0, 30)
-capToggle.Position = UDim2.new(0, 10, 0, 75)
+capToggle.Size = UDim2.new(0, 200, 0, 30)
+capToggle.Position = UDim2.new(0, 10, 0, 120)
 capToggle.Text = "Change Speed Cap?: false"
-capToggle.TextColor3 = Color3.fromRGB(255,255,255)
+capToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
 capToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 capToggle.Parent = frame
 
 local returnNormalButton = Instance.new("TextButton")
-returnNormalButton.Size = UDim2.new(0, 180, 0, 30)
-returnNormalButton.Position = UDim2.new(0, 10, 0, 110)
+returnNormalButton.Size = UDim2.new(0, 200, 0, 30)
+returnNormalButton.Position = UDim2.new(0, 10, 0, 160)
 returnNormalButton.Text = "Return to Normal"
-returnNormalButton.TextColor3 = Color3.fromRGB(255,255,255)
+returnNormalButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 returnNormalButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 returnNormalButton.Parent = frame
 
 local safeModeButton = Instance.new("TextButton")
-safeModeButton.Size = UDim2.new(0, 180, 0, 30)
-safeModeButton.Position = UDim2.new(0, 10, 0, 145)
+safeModeButton.Size = UDim2.new(0, 200, 0, 30)
+safeModeButton.Position = UDim2.new(0, 10, 0, 200)
 safeModeButton.Text = "Safe Mode: OFF"
-safeModeButton.TextColor3 = Color3.fromRGB(255,255,255)
+safeModeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 safeModeButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 safeModeButton.Parent = frame
 
--- Logic
+local toggleGuiButton = Instance.new("ImageButton")
+toggleGuiButton.Size = UDim2.new(0, 60, 0, 60)
+toggleGuiButton.Position = UDim2.new(0, 260, 0, 150)
+toggleGuiButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+toggleGuiButton.Image = "rbxassetid://7072726234" -- default image
+toggleGuiButton.Parent = gui
+toggleGuiButton.Active = true
+toggleGuiButton.Draggable = true
+
+local toggleImgUrlBox = Instance.new("TextBox")
+toggleImgUrlBox.Size = UDim2.new(0, 200, 0, 30)
+toggleImgUrlBox.Position = UDim2.new(0, 330, 0, 175)
+toggleImgUrlBox.PlaceholderText = "Paste image URL here"
+toggleImgUrlBox.TextColor3 = Color3.fromRGB(255,255,255)
+toggleImgUrlBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+toggleImgUrlBox.ClearTextOnFocus = false
+toggleImgUrlBox.Parent = gui
+
+-- Variables
 local capEnabled = false
 local safeMode = false
-local targetSpeed
-local normalWalkSpeed = 12
+local walkingSpeed = 12
+local runningSpeed = 28
 
-local function detectDefaultSpeed()
+local function detectBaseSpeed()
 	if player.Character then
 		local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
 		if humanoid then
-			normalWalkSpeed = humanoid.WalkSpeed
+			local baseSpeed = humanoid:GetAttribute("BaseSpeed")
+			if baseSpeed then
+				walkingSpeed = baseSpeed
+			else
+				walkingSpeed = 12
+			end
 		end
 	end
 end
 
 player.CharacterAdded:Connect(function()
-	task.wait(0.0001)
-	detectDefaultSpeed()
+	task.wait(0.1)
+	detectBaseSpeed()
 end)
-detectDefaultSpeed()
+
+detectBaseSpeed()
 
 local function getSprintValue()
 	repeat task.wait() until player.Character and player.Character:FindFirstChild("SpeedMultipliers")
@@ -104,7 +118,7 @@ local function getSprintValue()
 	if not sprint then
 		sprint = Instance.new("NumberValue")
 		sprint.Name = "Sprinting"
-		sprint.Value = normalWalkSpeed
+		sprint.Value = runningSpeed
 		sprint.Parent = folder
 	end
 	return sprint
@@ -115,45 +129,41 @@ local function getCapValue()
 	return player.Character:FindFirstChild("SpeedCapMultipliers")
 end
 
-local function setSpeed(value)
-	if safeMode and value > 30 then
-		value = 30
+local function setWalkingSpeed(value)
+	local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		humanoid.WalkSpeed = value
 	end
-	targetSpeed = value
+end
+
+local function setSprintSpeed(value)
 	local sprintValue = getSprintValue()
 	if sprintValue then
 		sprintValue.Value = value
 	end
-	if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
-		player.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = value
-	end
 end
 
-speedBox.FocusLost:Connect(function(enterPressed)
-	if enterPressed and tonumber(speedBox.Text) then
-		setSpeed(tonumber(speedBox.Text))
+walkSpeedBox.FocusLost:Connect(function(enterPressed)
+	if enterPressed and tonumber(walkSpeedBox.Text) then
+		local val = tonumber(walkSpeedBox.Text)
+		if safeMode and val > 30 then val = 30 end
+		walkingSpeed = val
+		setWalkingSpeed(walkingSpeed)
+	end
+end)
+
+runSpeedBox.FocusLost:Connect(function(enterPressed)
+	if enterPressed and tonumber(runSpeedBox.Text) then
+		local val = tonumber(runSpeedBox.Text)
+		if safeMode and val > 30 then val = 30 end
+		runningSpeed = val
+		setSprintSpeed(runningSpeed)
 	end
 end)
 
 task.spawn(function()
 	while true do
-		task.wait(0.05)
-		if targetSpeed and player.Character then
-			local sprintValue = getSprintValue()
-			local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-			if sprintValue and sprintValue.Value ~= targetSpeed then
-				sprintValue.Value = targetSpeed
-			end
-			if humanoid and humanoid.WalkSpeed ~= targetSpeed then
-				humanoid.WalkSpeed = targetSpeed
-			end
-		end
-	end
-end)
-
-task.spawn(function()
-	while true do
-		task.wait(0.5)
+		task.wait(0.2)
 		if player.Character then
 			local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
 			if humanoid then
@@ -163,6 +173,7 @@ task.spawn(function()
 	end
 end)
 
+-- Speed Cap toggle
 capToggle.MouseButton1Click:Connect(function()
 	capEnabled = not capEnabled
 	local cap = getCapValue()
@@ -176,28 +187,45 @@ capToggle.MouseButton1Click:Connect(function()
 	capToggle.Text = "Change Speed Cap?: " .. tostring(capEnabled)
 end)
 
+-- Return to normal button
 returnNormalButton.MouseButton1Click:Connect(function()
-	setSpeed(normalWalkSpeed)
-	speedBox.Text = ""
+	-- Reset sprint value and walk speed
+	setSprintSpeed(runningSpeed)
+	setWalkingSpeed(walkingSpeed)
+	walkSpeedBox.Text = tostring(walkingSpeed)
+	runSpeedBox.Text = tostring(runningSpeed)
 end)
 
 safeModeButton.MouseButton1Click:Connect(function()
 	safeMode = not safeMode
 	safeModeButton.Text = "Safe Mode: " .. (safeMode and "ON" or "OFF")
+	if safeMode then
+		-- Clamp speeds if too high
+		if walkingSpeed > 30 then
+			walkingSpeed = 30
+			setWalkingSpeed(walkingSpeed)
+			walkSpeedBox.Text = tostring(walkingSpeed)
+		end
+		if runningSpeed > 30 then
+			runningSpeed = 30
+			setSprintSpeed(runningSpeed)
+			runSpeedBox.Text = tostring(runningSpeed)
+		end
+	end
 end)
 
 toggleGuiButton.MouseButton1Click:Connect(function()
 	frame.Visible = not frame.Visible
 end)
 
-imageBox.FocusLost:Connect(function(enterPressed)
-	if enterPressed and imageBox.Text ~= "" then
-		toggleGuiButton.Image = imageBox.Text
-	end
-end)
 
-game:GetService("UserInputService").InputBegan:Connect(function(input, processed)
-	if not processed and input.KeyCode == Enum.KeyCode.F6 then
-		frame.Visible = not frame.Visible
+toggleImgUrlBox.FocusLost:Connect(function(enterPressed)
+	if enterPressed then
+		local url = toggleImgUrlBox.Text
+		if url ~= "" then
+			pcall(function()
+				toggleGuiButton.Image = url
+			end)
+		end
 	end
 end)
