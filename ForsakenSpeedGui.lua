@@ -16,11 +16,12 @@ frame.Draggable = true
 frame.Parent = gui
 
 local toggleGuiButton = Instance.new("TextButton")
-toggleGuiButton.Size = UDim2.new(0, 80, 0, 30)
-toggleGuiButton.Position = UDim2.new(0, 50, 0, 80)
+toggleGuiButton.Size = UDim2.new(0, 120, 0, 30)
+toggleGuiButton.Position = UDim2.new(0, 50, 0, 100)
 toggleGuiButton.Text = "Hide GUI"
 toggleGuiButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 toggleGuiButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+toggleGuiButton.Active = true
 toggleGuiButton.Draggable = true
 toggleGuiButton.Parent = gui
 
@@ -28,7 +29,7 @@ local speedBox = Instance.new("TextBox")
 speedBox.Size = UDim2.new(0, 180, 0, 30)
 speedBox.Position = UDim2.new(0, 10, 0, 10)
 speedBox.PlaceholderText = "Enter speed"
-speedBox.TextColor3 = Color3.fromRGB(255,255,255)
+speedBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 speedBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 speedBox.ClearTextOnFocus = false
 speedBox.Parent = frame
@@ -45,7 +46,7 @@ local capToggle = Instance.new("TextButton")
 capToggle.Size = UDim2.new(0, 180, 0, 30)
 capToggle.Position = UDim2.new(0, 10, 0, 75)
 capToggle.Text = "Change Speed Cap?: false"
-capToggle.TextColor3 = Color3.fromRGB(255,255,255)
+capToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
 capToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 capToggle.Parent = frame
 
@@ -53,7 +54,7 @@ local returnNormalButton = Instance.new("TextButton")
 returnNormalButton.Size = UDim2.new(0, 180, 0, 30)
 returnNormalButton.Position = UDim2.new(0, 10, 0, 110)
 returnNormalButton.Text = "Return to Normal"
-returnNormalButton.TextColor3 = Color3.fromRGB(255,255,255)
+returnNormalButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 returnNormalButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 returnNormalButton.Parent = frame
 
@@ -61,32 +62,33 @@ local safeModeButton = Instance.new("TextButton")
 safeModeButton.Size = UDim2.new(0, 180, 0, 30)
 safeModeButton.Position = UDim2.new(0, 10, 0, 145)
 safeModeButton.Text = "Safe Mode: OFF"
-safeModeButton.TextColor3 = Color3.fromRGB(255,255,255)
+safeModeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 safeModeButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 safeModeButton.Parent = frame
 
--- Logic vars
 local capEnabled = false
 local safeMode = false
 local targetSpeed
+local normalWalkSpeed = 12
+local normalSprintSpeed = 26
 local defaultBaseSpeed = 12
 
 local function detectDefaultSpeed()
     if player.Character then
-        local hum = player.Character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            local base = hum:GetAttribute("BaseSpeed")
-            if base then
-                defaultBaseSpeed = base
+        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            if humanoid:GetAttribute("BaseSpeed") then
+                defaultBaseSpeed = humanoid:GetAttribute("BaseSpeed")
             else
                 defaultBaseSpeed = 12
             end
+            normalWalkSpeed = defaultBaseSpeed
         end
     end
 end
 
 player.CharacterAdded:Connect(function()
-    task.wait(0.1)
+    task.wait(0.2)
     detectDefaultSpeed()
 end)
 
@@ -95,6 +97,7 @@ detectDefaultSpeed()
 local function getSprintValue()
     repeat task.wait() until player.Character and player.Character:FindFirstChild("SpeedMultipliers")
     local folder = player.Character:WaitForChild("SpeedMultipliers")
+
     local sprint = folder:FindFirstChild("Sprinting")
     if not sprint then
         sprint = Instance.new("NumberValue")
@@ -112,9 +115,8 @@ end
 
 local function setSpeed(value)
     if safeMode and value > 30 then
-        value = 30
+        value = 30 
     end
-
     targetSpeed = value
 
     local sprintValue = getSprintValue()
@@ -122,11 +124,10 @@ local function setSpeed(value)
         sprintValue.Value = value
     end
 
-    if player.Character then
+    if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
         local hum = player.Character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.WalkSpeed = value
-        end
+        hum.WalkSpeed = value
+        hum:SetAttribute("BaseSpeed", value)
     end
 end
 
@@ -138,21 +139,20 @@ end)
 
 task.spawn(function()
     while true do
-        task.wait(0.05)
+        task.wait(0.1)
         if targetSpeed and player.Character then
             local sprintValue = getSprintValue()
-            local hum = player.Character:FindFirstChildOfClass("Humanoid")
-            
-            local finalSpeed = targetSpeed
-            if safeMode and finalSpeed > 30 then
-                finalSpeed = 30
+            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+            if sprintValue and sprintValue.Value ~= targetSpeed then
+                sprintValue.Value = targetSpeed
             end
-            
-            if sprintValue and sprintValue.Value ~= finalSpeed then
-                sprintValue.Value = finalSpeed
-            end
-            if hum and hum.WalkSpeed ~= finalSpeed then
-                hum.WalkSpeed = finalSpeed
+            if humanoid then
+                if humanoid.WalkSpeed ~= targetSpeed then
+                    humanoid.WalkSpeed = targetSpeed
+                end
+                if humanoid:GetAttribute("BaseSpeed") ~= targetSpeed then
+                    humanoid:SetAttribute("BaseSpeed", targetSpeed)
+                end
             end
         end
     end
@@ -162,9 +162,9 @@ task.spawn(function()
     while true do
         task.wait(0.5)
         if player.Character then
-            local hum = player.Character:FindFirstChildOfClass("Humanoid")
-            if hum then
-                speedLabel.Text = "Current speed: " .. tostring(math.floor(hum.WalkSpeed))
+            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                speedLabel.Text = "Current speed: " .. tostring(math.floor(humanoid.WalkSpeed))
             end
         end
     end
@@ -184,27 +184,24 @@ capToggle.MouseButton1Click:Connect(function()
 end)
 
 returnNormalButton.MouseButton1Click:Connect(function()
-    if player.Character then
-        local hum = player.Character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            local baseSpeed = hum:GetAttribute("BaseSpeed") or 12
-            hum.WalkSpeed = baseSpeed
-        end
-        local sprintValue = getSprintValue()
-        if sprintValue then
-            sprintValue.Value = 1 -- default sprint value
-        end
+    local sprintValue = getSprintValue()
+    if sprintValue then
+        sprintValue.Value = 1
     end
-    targetSpeed = nil -- stops forcing custom speed
+
+    if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+        local hum = player.Character:FindFirstChildOfClass("Humanoid")
+        hum.WalkSpeed = 12
+        hum:SetAttribute("BaseSpeed", 12)
+    end
+
+    targetSpeed = nil
     speedBox.Text = ""
 end)
 
 safeModeButton.MouseButton1Click:Connect(function()
     safeMode = not safeMode
     safeModeButton.Text = "Safe Mode: " .. (safeMode and "ON" or "OFF")
-    if safeMode and targetSpeed and targetSpeed > 30 then
-        setSpeed(30)
-    end
 end)
 
 toggleGuiButton.MouseButton1Click:Connect(function()
